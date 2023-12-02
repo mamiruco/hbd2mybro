@@ -1,142 +1,88 @@
-(function($) {
- 
-  var SliceSlider = {
-    
-    /**
-     * Settings Object
-     */
-    settings: {
-      delta:              0,
-      currentSlideIndex:  0,
-      scrollThreshold:    40,
-      slides:             $('.slide'),
-      numSlides:          $('.slide').length,
-      navPrev:            $('.js-prev'),
-      navNext:            $('.js-next'),
-    },
-    
-    /**
-     * Init
-     */
-    init: function() {
-      s = this.settings;
-      this.bindEvents();
-    },
-    
-    /**
-     * Bind our click, scroll, key events
-     */
-    bindEvents: function(){
-      
-      // Scrollwheel & trackpad
-      s.slides.on({
-        'DOMMouseScroll mousewheel' : SliceSlider.handleScroll
+const snowFall = () => {
+  const bg = document.querySelector(".bg");
+  for (let i = 0; i < 300; i++) {
+    const snow = document.createElement("span");
+    snow.classList.add("snow");
+    if (i % 4 === 0) {
+      snow.classList.add("snowAnimation1");
+    } else if (i % 4 === 1) {
+      snow.classList.add("snowAnimation2");
+    } else if (i % 4 === 2) {
+      snow.classList.add("snowAnimation3");
+    } else {
+      snow.classList.add("snowAnimation4");
+    }
+    const aNumber = -50 + randomNumber(150);
+    const timeDelay = randomNumber(10);
+    const animDuration = 5 + randomNumber(10) + Math.random() + 0.2;
+    const snowOpacity = randomNumber(10) * 0.1;
+    const heightWidth = randomNumber(11) + 5;
+    snow.style.width = `${heightWidth}px`;
+    snow.style.height = `${heightWidth}px`;
+    snow.style.left = `${aNumber}%`;
+    snow.style.animationDelay = `${timeDelay}s`;
+    snow.style.animationDuration = `${animDuration}s`;
+    snow.style.opacity = `${snowOpacity}`;
+    bg.appendChild(snow);
+  }
+};
+
+const randomNumber = (limit) => {
+  return Math.floor(Math.random() * limit);
+};
+
+snowFall();
+
+const textShadowColor = [
+  "white",
+  "green",
+  "orange",
+  "pink",
+  "violet",
+  "blue",
+  "red",
+  "yellow",
+];
+const color = [
+  "#0c0f0a",
+  "#1fd224",
+  "#ffaa01",
+  "#ff00aa",
+  "#aa00ff",
+  "#00aaff",
+  "#f00",
+  "#ffea00",
+];
+let count = 1;
+
+const glowingText = (count) => {
+  const btn = document.querySelector(".btn");
+  const newYear = document.querySelector(".new-year");
+  const year = document.querySelector(".year");
+  const snow = document.querySelectorAll(".snow");
+
+  btn.addEventListener("click", () => {
+    if (count !== 0) {
+      newYear.classList.remove(textShadowColor[count - 1]);
+      year.classList.remove(textShadowColor[count - 1]);
+      btn.classList.remove(`btn-${textShadowColor[count - 1]}`);
+      snow.forEach((e) => {
+        e.classList.remove(`snow-${textShadowColor[count - 1]}`);
       });
-      // On click prev
-      s.navPrev.on({
-        'click' : SliceSlider.prevSlide
-      });
-      // On click next
-      s.navNext.on({
-        'click' : SliceSlider.nextSlide
-      });
-      // On Arrow keys
-      $(document).keyup(function(e) {
-        // Left or back arrows
-        if ((e.which === 37) ||  (e.which === 38)){
-          SliceSlider.prevSlide();
-        }
-        // Down or right
-        if ((e.which === 39) ||  (e.which === 40)) {
-          SliceSlider.nextSlide();
-        }
-      });
-    },
-    
-    /** 
-     * Interept scroll direction
-     */
-    handleScroll: function(e){
+    }
+    if (count === textShadowColor.length) {
+      count = 0;
+    }
 
-      // Scrolling up
-      if (e.originalEvent.detail < 0 || e.originalEvent.wheelDelta > 0) { 
-
-        s.delta--;
-     
-        if ( Math.abs(s.delta) >= s.scrollThreshold) {
-          SliceSlider.prevSlide();
-        }
-      }
- 
-      // Scrolling Down
-      else {
- 
-        s.delta++;
- 
-        if (s.delta >= s.scrollThreshold) {
-          SliceSlider.nextSlide();
-        }
-      }
- 
-      // Prevent page from scrolling
-      return false;
-    },
-
-    /**
-     * Show Slide
-     */
-    showSlide: function(){ 
-      // reset
-      s.delta = 0;
-      // Bail if we're already sliding
-      if ($('body').hasClass('is-sliding')){
-        return;
-      }
-      // Loop through our slides
-      s.slides.each(function(i, slide) {
-
-        // Toggle the is-active class to show slide
-        $(slide).toggleClass('is-active', (i === s.currentSlideIndex)); 
-        $(slide).toggleClass('is-prev', (i === s.currentSlideIndex - 1)); 
-        $(slide).toggleClass('is-next', (i === s.currentSlideIndex + 1)); 
-        
-        // Add and remove is-sliding class
-        $('body').addClass('is-sliding');
-
-        setTimeout(function(){
-            $('body').removeClass('is-sliding');
-        }, 1000);
-      });
-    },
-
-    /**
-     * Previous Slide
-     */
-    prevSlide: function(){
-      
-      // If on first slide, loop to last
-      if (s.currentSlideIndex <= 0) {
-        s.currentSlideIndex = s.numSlides;
-      }
-      s.currentSlideIndex--;
-      
-      SliceSlider.showSlide();
-    },
-
-    /**
-     * Next Slide
-     */
-    nextSlide: function(){
-      
-      s.currentSlideIndex++;
-   
-      // If on last slide, loop to first
-      if (s.currentSlideIndex >= s.numSlides) { 
-        s.currentSlideIndex = 0;
-      }
- 
-      SliceSlider.showSlide();
-    },
-  };
-  SliceSlider.init();
-})(jQuery);
+    newYear.classList.add(textShadowColor[count]);
+    year.classList.add(textShadowColor[count]);
+    btn.classList.add(`btn-${textShadowColor[count]}`);
+    snow.forEach((e) => {
+      e.classList.add(`snow-${textShadowColor[count]}`);
+    });
+    btn.innerHTML = "Click Again!";
+    btn.style.color = `${color[count]}`;
+    count++;
+  });
+};
+glowingText(count);
